@@ -8,6 +8,11 @@ from .utils import FileIO
 
 # TODO
 #   - Rename *PageDataTree
+#   - Output key/root/value
+
+
+class JsonTree:
+  pass
 
 
 class PageDataTree:
@@ -27,9 +32,12 @@ class PageDataTree:
 
     return Tree.DELIMITER.join(keys)
 
-  def process_result(self, result: str,
-                           result_to: str,
-                           result_value: str) -> Union[Optional[str], NoReturn]:
+  def process_result(
+      self,
+      result: str,
+      result_to: str,
+      result_value: str
+  ) -> Union[Optional[str], NoReturn]:
     # TODO: rename parameters name
     if Tree.SEARCH_FILTER_KEY and (Tree.SEARCH_FILTER_KEY not in result):
       return None
@@ -40,7 +48,7 @@ class PageDataTree:
       if str(result_value) != Tree.SEARCH_FILTER_VALUE:
         return None
 
-    if (Tree.SEARCH_LIMIT and Tree.SEARCH_LIMIT > 0):
+    if Tree.SEARCH_LIMIT and (Tree.SEARCH_LIMIT > 0):
       Tree.SEARCH_LIMIT -= 1
 
     if Tree.SEARCH_LIMIT == 0:
@@ -52,35 +60,41 @@ class PageDataTree:
     if result_to == Key.SAVE:
       return result
 
-  def tree_by_key(self, data: Optional[dict] = None, key: str = '',
-                        gen_tree: str = Tree.ROOT, list_index: Optional[int] = None,
-                        result_to: str = Key.SAVE) -> Generator[str, None, None]:
+  def tree_by_key_or_view(
+      self, data: Optional[dict] = None, key: str = '', view: bool = False,
+      gen_tree: str = Tree.ROOT, list_index: Optional[int] = None,
+      result_to: str = Key.SAVE
+  ) -> Generator[str, None, None]:
     """Yields str: ex. A -> B -> C -> *key
     """
     if data is None:
       data = self.data
 
     if isinstance(data, list):
+      if Tree.SEARCH_ITEMS_LIMIT:
+        data = data[:Tree.SEARCH_ITEMS_LIMIT]
       for idx, item in enumerate(data):
-        yield from self.tree_by_key(
-          item, key, gen_tree, list_index=idx, result_to=result_to
+        yield from self.tree_by_key_or_view(
+          item, key, view, gen_tree, list_index=idx, result_to=result_to
         )
 
     if isinstance(data, dict):
       for data_key, data_value in data.items():
         tree = self.join_tree(gen_tree, data_key, list_index)
 
-        if data_key == key:
+        if (data_key == key) or view:
           yield self.process_result(tree, result_to, data_value)
-          continue
+          if not view:
+            continue
 
-        if data_key is None:
-          continue
-        if data_value is None:
-          continue
+        if not view:
+          if data_key is None:
+            continue
+          elif data_value is None:
+            continue
 
-        yield from self.tree_by_key(
-          data_value, key, tree, result_to=result_to
+        yield from self.tree_by_key_or_view(
+          data_value, key, view, tree, result_to=result_to
         )
 
   def data_by_tree(self, tree: str) -> dict:
@@ -99,3 +113,4 @@ class PageDataTree:
         inner_data = inner_data[key]
 
     return inner_data
+

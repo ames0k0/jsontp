@@ -1,3 +1,6 @@
+version: 1.0.4
+	- Add cli params `-v`, `-il`
+
 version: 1.0.0
 	- Add setup.py
 

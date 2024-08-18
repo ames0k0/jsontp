@@ -14,6 +14,7 @@ class Tree:
   DELIMITER = ' -> '
   LIST_INDEX_WRAPPER = "[{index}]"
   SEARCH_LIMIT = -1
+  SEARCH_ITEMS_LIMIT = -1
   SEARCH_FILTER_KEY = ''
   SEARCH_FILTER_VALUE = ''
 
