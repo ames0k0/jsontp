@@ -55,8 +55,8 @@ from jsontp import PageDataTree
 from jsontp.utils import FileIO
 from jsontp.config import Key
 
-input_filepath = 'ranker_writer-ignore_me.json'
-output_filepath = 'ranker_writer_user_content-ignore_me.json'
+input_filepath = 'input.json'
+output_filepath = 'output.json'
 
 file_io = FileIO(input_filepath)
 file_data = file_io.load()
