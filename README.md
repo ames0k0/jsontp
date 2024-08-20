@@ -1,7 +1,13 @@
-Script to generate a json `tree` for `key` and dumping the `value` of the `key` by `tree`
+CLI tool to view json tree / structure
+
+- [x] searches for keys or values
+- [x] filters by keys or values
+- [x] Adding limit for list items and search results
+- [x] Dumping the value for a given tree / path
+
 ```json
-{"a": 1, "b": 2, "d": {"c": 3}}		# 'root -> d -> c'
-{"a": 1, "b": 2, "d": [{"c": 3}]}	# 'root -> d -> [0] -> c'
+{"a": 1, "b": {"c": 3}}		# 'root -> b -> c'
+{"a": 1, "b": [{"c": 3}]}	# 'root -> b -> [0] -> c'
 ```
 
 #### Start
@@ -11,14 +17,46 @@ pip install jsontp
 pip install git+https://github.com/ames0k0/jsontp
 ```
 
-#### Example (API)
+#### CLI
+```
+CLI tool to view json tree / structure
+
+options:
+  -h, --help  show this help message and exit
+  -i I        [i]nput filepath
+  -o O        [o]utput filepath
+  -v [V]      [v]view json tree
+  -k K        [k]ey to search
+  -t T        [t]ree to `-o` the data from
+  -l L        [l]imit stdout
+  -il IL      [i]tems [l]imit stdout
+  -fk FK      [f]ilter stdout by `key`
+  -fv FV      [f]ilter stdout by `value`
+```
+
+#### Usage Example (CLI)
+```bash
+# View tree / structure with array items limit 1
+python -m jsontp -i input.json -v -il 1
+
+# Search for `key` (-k), filter by `key` (-fk)
+python -m jsontp -i input.json -k id -fk user
+
+# Search for `key` (-k), filter by `key` (-fk), print the value for `tree`
+python -m jsontp -i input.json -k id -fk user -o '*'
+
+# Print the value for `tree` (NOTE: `-o <output_filepath>` - to dump a value)
+python -m jsontp -i input.json -t 'root -> props -> ... -> user' -o '*'
+```
+
+#### Experimental Usage Example (API)
 ```python3
 from jsontp import PageDataTree
 from jsontp.utils import FileIO
 from jsontp.config import Key
 
-input_filepath = 'ranker_writer-ignore_me.json'
-output_filepath = 'ranker_writer_user_content-ignore_me.json'
+input_filepath = 'input.json'
+output_filepath = 'output.json'
 
 file_io = FileIO(input_filepath)
 file_data = file_io.load()
@@ -30,86 +68,5 @@ user_data = pdt.data_by_tree(next(pdt_tree))
 file_io.dump(user_data, output_filepath)
 ```
 
-#### Example (CLI)
-```bash
-# Search for `key` (-k), filter by `key` (-fk)
-python -m jsontp -i <input_filepath> -k id -fk user
-
-# Search for `key` (-k), filter by `key` (-fk), print the value for `tree`
-python -m jsontp -i <input_filepath> -k id -fk user -o '*'
-
-# Print the value for `tree` (NOTE: `-o <output_filepath>` - to dump a value)
-python -m jsontp -i <input_filepath> -t 'root -> props -> ... -> user' -o '*'
-```
-
-#### Dependencies
-```bash
-pip -V		# 22.1.1
-python -V	# 3.10.5
-pytest -V	# 6.2.5
-```
-
-#### Script structure
-```
-# tree -I '__pycache__|env|build|jsontp.egg-info'
-.
-├── jsontp
-│   ├── __init__.py
-│   ├── __main__.py
-│   ├── config.py
-│   ├── utils.py
-│   └── run.py
-├── tests
-│   ├── __init__.py
-│   └── test_page_data_tree.py
-├── data
-│   ├── ranker_writer-ignore_me.json
-│   └── ranker_writer_user_content-ignore_me.json
-├── setup.py
-├── LICENSE
-├── README.md
-├── UPDATES.txt
-└── CONTRIBUTORS.md
-```
-
-#### TODO
-- [x] nested json
-- [x] json in the list
-- [x] check for multiple keys
-	- [x] return multiple keys (iterable result)
-	- [ ] unique multiple keys (not every single item in the list)
-- [ ] check for keys by value
-- [x] access to the data in the list
-	- [x] add and get the index from `tree`
-- [ ] handle errors on searching for a non string key
-- [x] fix errors on reading and writing to the json file without filename
-	- [x] no need to test for writing
-	- [x] raising an error `FileNotFoundError` for not valid input filepath
-
-#### API
-- [ ] Flags
-
-#### CLI
-- [x] Input
-	- [x] json file
-- [ ] Key
-	- [x] search: `str`
-	- [x] filter `tree` by must have `key` (-fk)
-		- [ ] multiple (-fk)
-	- [x] filter `tree` by must have `value` (-fv)
-		- [ ] multiple (-fv)
-	- [x] result (config.py[Key]): `print`, `return`
-- [x] Limit
-	- [x] `print`
-	- [x] `return`
-- [ ] Output
-	- [x] dump a `value` to the file (`-o <output_filepath>`)
-	- [ ] append to the dump file
-	- [x] `print`: '\*'
-
-Coding process: https://youtu.be/DkBAIKMN7x0
-
-#### License
-MIT
-<br />
-Copyright (c) 2022 Nodaa Gaji
+#### License :: MIT
+Copyright (c) 2022,2024 ames0k0
