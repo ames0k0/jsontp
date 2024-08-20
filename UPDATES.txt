@@ -1,4 +1,4 @@
-version: 1.0.4
+version: 1.1.0
 	- Add cli params `-v`, `-il`
 
 version: 1.0.0
