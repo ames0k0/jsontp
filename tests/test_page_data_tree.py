@@ -1,13 +1,14 @@
 import pytest
 
-from run import PageDataTree, Tree
+from jsontp.run import PageDataTree, Tree
 
 
 def test_simple_data():
     data = {"a": 1, "b": 2}
+
     with pytest.raises(StopIteration):
         assert next(
-            PageDataTree(data).tree_by_key(
+            PageDataTree(data).tree_by_key_or_view(
                 data,
                 "c",
             )
@@ -18,7 +19,7 @@ def test_nested_simple_data():
     data = {"a": 1, "b": 2, "d": {"c": 3}}
 
     assert next(
-        PageDataTree(data).tree_by_key(
+        PageDataTree(data).tree_by_key_or_view(
             data,
             "c",
         )
@@ -32,7 +33,7 @@ def test_simple_data_with_list():
     data = {"a": 1, "b": 2, "d": [{"c": 3}]}
 
     assert next(
-        PageDataTree(data).tree_by_key(
+        PageDataTree(data).tree_by_key_or_view(
             data,
             "c",
         )
@@ -47,9 +48,9 @@ def test_simple_data_with_none():
     data = {"a": 1, "b": None, None: 4, "d": [{"c": 3}]}
 
     assert next(
-        PageDataTree(data).tree_by_key(
-            data,
-            "c",
+        PageDataTree(data).tree_by_key_or_view(
+            data=data,
+            key="c",
         )
     ) == PageDataTree.join_tree(
         tree=PageDataTree.join_tree(Tree.ROOT, "d"),
@@ -63,7 +64,7 @@ def test_simple_data_for_noreturn():
 
     assert (
         next(
-            PageDataTree(data).tree_by_key(
+            PageDataTree(data).tree_by_key_or_view(
                 data,
                 "c",
                 result_to="print",

@@ -1,24 +1,24 @@
 #### Script structure
 ```
-# tree -I '__pycache__|env|build|jsontp.egg-info'
+# tree --dirsfirst -I '__pycache__|env|build|jsontp.egg-info'
 .
 ├── jsontp
-│   ├── __init__.py
-│   ├── __main__.py
-│   ├── config.py
-│   ├── utils.py
-│   └── run.py
+│   ├── config.py
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── run.py
+│   └── utils.py
 ├── tests
-│   ├── __init__.py
-│   └── test_page_data_tree.py
-├── data
-│   ├── ranker_writer-ignore_me.json
-│   └── ranker_writer_user_content-ignore_me.json
-├── setup.py
+│   ├── __init__.py
+│   └── test_page_data_tree.py
+├── CONTRIBUTORS.md
+├── dev-requirements.txt
 ├── LICENSE
+├── MANIFEST
+├── MANIFEST.in
 ├── README.md
-├── UPDATES.txt
-└── CONTRIBUTORS.md
+├── setup.py
+└── UPDATES.txt
 ```
 
 #### Dependencies
@@ -35,13 +35,12 @@ pytest -V	# 6.2.5
 tabs
 	vim: ts=8 sw=8
 spaces
-	vim: ts=2 sw=2 expandtab
+	vim: ts=4 sw=4 expandtab
 ```
 Coding process: https://youtu.be/DkBAIKMN7x0
 
 #### MyTODO
-- [x] use 2 spaces instead of 4
-	- [x] use tabs for UPPERCASE files (.md, ...)
+- [x] use tabs for UPPERCASE files (.md, ...)
 - [x] remove or move to another file the entrypoint block
 - [x] make it an API (package)
 - [x] add tests

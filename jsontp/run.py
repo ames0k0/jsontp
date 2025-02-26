@@ -19,13 +19,17 @@ class PageDataTree:
 
     # TODO: check for other types
     @staticmethod
-    def join_tree(tree: str, key: str, list_index: Optional[int] = None):
+    def join_tree(
+        tree: str,
+        key: str | None,
+        list_index: Optional[int] = None,
+    ) -> str:
         keys = [tree]
 
         if list_index is not None:
             keys.append(Tree.LIST_INDEX_WRAPPER.format(index=list_index))
 
-        keys.append(key)
+        keys.append(str(key))
 
         return Tree.DELIMITER.join(keys)
 
@@ -68,7 +72,7 @@ class PageDataTree:
             data = self.data
 
         if isinstance(data, list):
-            if Tree.SEARCH_ITEMS_LIMIT:
+            if Tree.SEARCH_ITEMS_LIMIT > 0:
                 data = data[: Tree.SEARCH_ITEMS_LIMIT]
             for idx, item in enumerate(data):
                 yield from self.tree_by_key_or_view(
