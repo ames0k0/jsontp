@@ -46,7 +46,7 @@ class PageDataTree:
             if str(result_value) != Tree.SEARCH_FILTER_VALUE:
                 return None
 
-        if Tree.SEARCH_LIMIT and (Tree.SEARCH_LIMIT > 0):
+        if Tree.SEARCH_LIMIT > 0:
             Tree.SEARCH_LIMIT -= 1
 
         if Tree.SEARCH_LIMIT == 0:
