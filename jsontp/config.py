@@ -1,6 +1,3 @@
-# TODO: use namedtuple
-
-
 class FD:
     """File and Directory"""
 

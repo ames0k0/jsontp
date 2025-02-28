@@ -5,29 +5,29 @@ import argparse
 from typing import Optional
 from pprint import pprint
 
-from .config import FD, Tree, Key
-from .utils import FileIO
-
-from .run import PageDataTree
+from . import config
+from . import utils
+from . import JsonTreeParser
 
 
 def main(
+    *,
     input_filepath: str,
     output_filepath: str,
     key: Optional[str],
     tree: Optional[str],
     view: Optional[bool],
 ) -> Optional[NotImplementedError]:
-    file_io = FileIO(input_filepath)
+    file_io = utils.FileIO(src=input_filepath)
     file_data = file_io.load()
 
-    pdt = PageDataTree(file_data)
+    pdt = JsonTreeParser(file_data)
 
     if key or view:
         pdt_tree = pdt.tree_by_key_or_view(
             key=key,
             view=view,
-            result_to=(Key.SAVE if output_filepath else Key.SHOW),
+            result_to=config.Key.SAVE if output_filepath else config.Key.SHOW,
         )
     elif tree:
         pdt_tree = (tree,)
@@ -38,10 +38,10 @@ def main(
         if not tree:
             continue
 
-        tree_data = pdt.data_by_tree(tree)
+        tree_data = pdt.data_by_tree(tree=tree)
 
         if output_filepath:
-            if output_filepath == FD.STDOUT:
+            if output_filepath == config.FD.STDOUT:
                 print(tree)
                 pprint(tree_data)
                 print()
@@ -52,7 +52,7 @@ def main(
                     "Use `-t` flag to dump a value for `tree`",
                 )
 
-            file_io.dump(tree_data, output_filepath)
+            file_io.dump(data=tree_data, dst=output_filepath)
 
 
 if __name__ == "__main__":
@@ -82,17 +82,25 @@ if __name__ == "__main__":
     if not input_filepath:
         print("[i]nput filepath is required")
         exit()
-    if not any((key, tree, view)):
-        print("[k]ey or [t]ree or [v]iew is required")
+    if sum(map(bool, (key, tree, view))) != 1:
+        print("Only one of [k]ey or [t]ree or [v]iew is required!")
         exit()
 
     if args.l:
         # decrements the limit befor returning the `tree`
-        Tree.SEARCH_LIMIT = args.l + 1
+        config.Tree.SEARCH_LIMIT = args.l + 1
     if args.il:
-        Tree.SEARCH_ITEMS_LIMIT = args.il
+        config.Tree.SEARCH_ITEMS_LIMIT = args.il
 
-    Tree.SEARCH_FILTER_KEY = args.fk or Tree.SEARCH_FILTER_KEY
-    Tree.SEARCH_FILTER_VALUE = args.fv or Tree.SEARCH_FILTER_VALUE
+    if args.fk:
+        config.Tree.SEARCH_FILTER_KEY = args.fk
+    if args.fv:
+        config.Tree.SEARCH_FILTER_VALUE = args.fv
 
-    main(input_filepath, output_filepath, key, tree, view)
+    main(
+        input_filepath=input_filepath,
+        output_filepath=output_filepath,
+        key=key,
+        tree=tree,
+        view=view,
+    )

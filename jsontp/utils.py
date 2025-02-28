@@ -17,20 +17,26 @@ class FileIO:
     dump - writes the `data` to the given `dst` (destination)
     """
 
-    def __init__(self, src: str):
+    def __init__(self, *, src: str):
         self.src = src
 
     @staticmethod
-    def validate_path(path: str) -> Optional[FileNotFoundError]:
+    def validate_path(*, path: str) -> Optional[FileNotFoundError]:
         if not os.path.exists(path):
             raise FileNotFoundError(path)
 
-    def dump(self, data: dict, dst: str, indent: int = 4) -> None:
+    def dump(
+        self,
+        *,
+        data: dict,
+        dst: str,
+        indent: int = 4,
+    ) -> None:
         with open(dst, "w") as ftw:
             ftw.write(json.dumps(data, indent=indent))
 
     def load(self) -> Union[dict, FileNotFoundError]:
-        self.validate_path(self.src)
+        self.validate_path(path=self.src)
 
         with open(self.src, "r") as ftr:
             return json.loads(ftr.read())
