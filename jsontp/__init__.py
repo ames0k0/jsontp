@@ -5,7 +5,11 @@ from . import config
 
 
 class JsonTreeParser:
-    def __init__(self, data: json.loads):
+    def __init__(
+        self,
+        *,
+        data: json.loads | typing.Dict[typing.Any, typing.Any],
+    ):
         self.data = data
 
     @staticmethod
@@ -67,6 +71,9 @@ class JsonTreeParser:
         result_to: str = config.Key.SAVE,
     ) -> typing.Generator[str, None, None]:
         """Yields str: ex. A -> B -> C -> *key"""
+        if all((key, view)):
+            raise ValueError("Only `key` or `view` must set!")
+
         if data is None:
             data = self.data
 

@@ -34,7 +34,7 @@ options:
   -fv FV      [f]ilter stdout by `value`
 ```
 
-#### Usage Example (CLI)
+#### Usage Example :: CLI
 ```bash
 # View tree / structure with array items limit 1
 python -m jsontp -i input.json -v -il 1
@@ -45,27 +45,24 @@ python -m jsontp -i input.json -k id -fk user
 # Search for `key` (-k), filter by `key` (-fk), print the value for `tree`
 python -m jsontp -i input.json -k id -fk user -o '*'
 
-# Print the value for `tree` (NOTE: `-o <output_filepath>` - to dump a value)
+# Print the value for `tree` (NOTE: `-o output.json` - to dump a value)
 python -m jsontp -i input.json -t 'root -> props -> ... -> user' -o '*'
 ```
 
-#### Experimental Usage Example (API)
+#### Usage Example :: API (Experimental)
 ```python3
-from jsontp import PageDataTree
+from jsontp import JsonTreeParser
 from jsontp.utils import FileIO
 from jsontp.config import Key
 
-input_filepath = 'input.json'
-output_filepath = 'output.json'
-
-file_io = FileIO(input_filepath)
+file_io = FileIO(src="input.json")
 file_data = file_io.load()
 
-pdt = PageDataTree(file_data)
-pdt_tree = pdt.tree_by_key(key='user', result_to=Key.SAVE)
+pdt = JsonTreeParser(data=file_data)
+pdt_tree = pdt.tree_by_key_or_view(key="user", result_to=Key.SAVE)
 
-user_data = pdt.data_by_tree(next(pdt_tree))
-file_io.dump(user_data, output_filepath)
+data_for_tree = pdt.data_by_tree(tree=next(pdt_tree))
+file_io.dump(data=data_for_tree, dst="output.json")
 ```
 
 #### License :: MIT

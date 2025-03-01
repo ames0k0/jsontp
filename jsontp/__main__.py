@@ -21,7 +21,7 @@ def main(
     file_io = utils.FileIO(src=input_filepath)
     file_data = file_io.load()
 
-    pdt = JsonTreeParser(file_data)
+    pdt = JsonTreeParser(data=file_data)
 
     if key or view:
         pdt_tree = pdt.tree_by_key_or_view(
