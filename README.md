@@ -1,23 +1,24 @@
 CLI tool to view json tree / structure
 
-- [x] searches for keys or values
-- [x] filters by keys or values
-- [x] Adding limit for list items and search results
-- [x] Dumping the value for a given tree / path
-
-```json
-{"a": 1, "b": {"c": 3}}		# 'root -> b -> c'
-{"a": 1, "b": [{"c": 3}]}	# 'root -> b -> [0] -> c'
+```bash
+cat input.json
+# {"a": 1, "b": [{"c": 3}]}
+python -m jsontp -i input.json -v
+# root -> a
+# root -> b
+# root -> b -> [0] -> c
+python -m jsontp -i input.json -k c
+# root -> b -> [0] -> c
 ```
 
-#### Start
+#### Install
 ```bash
 pip install jsontp
 # or
 pip install git+https://github.com/ames0k0/jsontp
 ```
 
-#### CLI
+#### CLI Arguments
 ```
 CLI tool to view json tree / structure
 
