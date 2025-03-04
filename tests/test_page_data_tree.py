@@ -1,6 +1,7 @@
 import pytest
 
-from jsontp.run import PageDataTree, Tree
+from jsontp import JsonTreeParser
+from jsontp.config import Tree
 
 
 def test_simple_data():
@@ -8,9 +9,9 @@ def test_simple_data():
 
     with pytest.raises(StopIteration):
         assert next(
-            PageDataTree(data).tree_by_key_or_view(
-                data,
-                "c",
+            JsonTreeParser(data=data).tree_by_key_or_view(
+                data=data,
+                key="c",
             )
         )
 
@@ -19,12 +20,15 @@ def test_nested_simple_data():
     data = {"a": 1, "b": 2, "d": {"c": 3}}
 
     assert next(
-        PageDataTree(data).tree_by_key_or_view(
-            data,
-            "c",
+        JsonTreeParser(data=data).tree_by_key_or_view(
+            data=data,
+            key="c",
         )
-    ) == PageDataTree.join_tree(
-        tree=PageDataTree.join_tree(Tree.ROOT, "d"),
+    ) == JsonTreeParser.join_tree(
+        tree=JsonTreeParser.join_tree(
+            tree=Tree.ROOT,
+            key="d",
+        ),
         key="c",
     )
 
@@ -33,12 +37,15 @@ def test_simple_data_with_list():
     data = {"a": 1, "b": 2, "d": [{"c": 3}]}
 
     assert next(
-        PageDataTree(data).tree_by_key_or_view(
-            data,
-            "c",
+        JsonTreeParser(data=data).tree_by_key_or_view(
+            data=data,
+            key="c",
         )
-    ) == PageDataTree.join_tree(
-        tree=PageDataTree.join_tree(Tree.ROOT, "d"),
+    ) == JsonTreeParser.join_tree(
+        tree=JsonTreeParser.join_tree(
+            tree=Tree.ROOT,
+            key="d",
+        ),
         key="c",
         list_index=0,
     )
@@ -48,12 +55,15 @@ def test_simple_data_with_none():
     data = {"a": 1, "b": None, None: 4, "d": [{"c": 3}]}
 
     assert next(
-        PageDataTree(data).tree_by_key_or_view(
+        JsonTreeParser(data=data).tree_by_key_or_view(
             data=data,
             key="c",
         )
-    ) == PageDataTree.join_tree(
-        tree=PageDataTree.join_tree(Tree.ROOT, "d"),
+    ) == JsonTreeParser.join_tree(
+        tree=JsonTreeParser.join_tree(
+            tree=Tree.ROOT,
+            key="d",
+        ),
         key="c",
         list_index=0,
     )
@@ -64,9 +74,9 @@ def test_simple_data_for_noreturn():
 
     assert (
         next(
-            PageDataTree(data).tree_by_key_or_view(
-                data,
-                "c",
+            JsonTreeParser(data=data).tree_by_key_or_view(
+                data=data,
+                key="c",
                 result_to="print",
             )
         )
@@ -78,10 +88,13 @@ def test_simple_data_value_with_list_index():
     data = {"a": 1, "b": 2, "d": [{"c": 3}]}
 
     # 'root -> d -> [0] -> c'
-    tree = PageDataTree.join_tree(
-        tree=PageDataTree.join_tree(Tree.ROOT, "d"),
+    tree = JsonTreeParser.join_tree(
+        tree=JsonTreeParser.join_tree(
+            tree=Tree.ROOT,
+            key="d",
+        ),
         key="c",
         list_index=0,
     )
 
-    assert PageDataTree(data).data_by_tree(tree) == 3
+    assert JsonTreeParser(data=data).data_by_tree(tree=tree) == 3

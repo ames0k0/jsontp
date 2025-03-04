@@ -2,8 +2,6 @@ from pathlib import Path
 
 from setuptools import setup
 
-from jsontp.__init__ import __version__
-
 
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
@@ -11,7 +9,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="jsontp",
-    version=__version__,
+    version="1.2.0",
     description="JSON Tree Parser",
     long_description=long_description,
     long_description_content_type="text/markdown",

@@ -1,3 +1,6 @@
+version: 1.2.0
+	- Update API
+
 version: 1.1.0
 	- Add cli params `-v`, `-il`
 
